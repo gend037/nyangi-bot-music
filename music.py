@@ -124,7 +124,7 @@ class Music:
         return True
 
     @commands.command(pass_context=True, no_pm=True)
-    async def 돼장(self, ctx, *, song : str):
+    async def (self, ctx, *, song : str):
         """Plays a song.
         If there is a song currently in the queue, then it is
         queued until the next song is done playing.
