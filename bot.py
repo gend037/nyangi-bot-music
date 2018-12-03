@@ -34,7 +34,7 @@ ser=[]
 @bot.event
 async def on_ready():
    print('시작!')
-   await bot.change_presence(game=discord.game(name='Gendo37이랑 코드 손보는중 '))
+  
     
 	
 class Main_Commands():
