@@ -124,7 +124,7 @@ class Music:
         return True
 
     @commands.command(pass_context=True, no_pm=True)
-    async def 냥이(self, ctx, *, song : str):
+    async def (self, ctx, *, song : str):
         """내 이름 뒤에 듣고 싶은 노래 제목을 쓰거라, 링크도 쓸수 있느니라
         """
         state = self.get_voice_state(ctx.message.server)
