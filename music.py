@@ -62,7 +62,7 @@ class VoiceState:
         while True:
             self.play_next_song.clear()
             self.current = await self.songs.get()
-            await self.bot.send_message(self.current.channel, '현제 노래는' + str(self.current))
+            await self.bot.send_message(self.current.channel, '현재 노래는' + str(self.current))
             self.current.player.start()
             await self.play_next_song.wait()
 class Music:
@@ -105,7 +105,7 @@ class Music:
         except discord.InvalidArgument:
             await self.bot.say('하... 이건 음성채널이 아니구나')
         else:
-            await self.bot.say('음악 틀 수 있느니라' '**' + channel.name)
+            await self.bot.say('음악 틀 수 있느니라 **' + channel.name)
 
     @commands.command(pass_context=True, no_pm=True)
     async def 와(self, ctx):
