@@ -33,7 +33,7 @@ ser=[]
 
 @bot.event
 async def on_ready():
-   print('시작!')
+       print('시작!')
   
         
 @bot.command()
