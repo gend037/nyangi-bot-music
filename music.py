@@ -108,7 +108,7 @@ class Music:
             await self.bot.say('음악 틀 수 있느니라 **' + channel.name)
 
     @commands.command(pass_context=True, no_pm=True)
-    async def 와(self, ctx):
+    async def sum(self, ctx):
         """나를 부를 수 있느니라"""
         summoned_channel = ctx.message.author.voice_channel
         if summoned_channel is None:
@@ -125,7 +125,12 @@ class Music:
 
     @commands.command(pass_context=True, no_pm=True)
     async def 까미(self, ctx, *, song : str):
-        """내 이름 뒤에 듣고 싶은 노래 제목을 쓰거라, 링크도 쓸수 있느니라
+        """Plays a song.
+        If there is a song currently in the queue, then it is
+        queued until the next song is done playing.
+        This command automatically searches as well from YouTube.
+        The list of supported sites can be found here:
+        https://rg3.github.io/youtube-dl/supportedsites.html
         """
         state = self.get_voice_state(ctx.message.server)
         opts = {
@@ -147,7 +152,7 @@ class Music:
         else:
             player.volume = 0.6
             entry = VoiceEntry(ctx.message, player)
-            await self.bot.say('노래신청이니라! ' + str(entry))
+            await self.bot.say('노래신청이니라!' + str(entry))
             await state.songs.put(entry)
 
     @commands.command(pass_context=True, no_pm=True)
@@ -161,7 +166,7 @@ class Music:
             await self.bot.say('볼륨은 {:.0%}'.format(player.volume))
     @commands.command(pass_context=True, no_pm=True)
     async def 계속(self, ctx):
-        """노래를 계속 틀겠느니라."""
+        """노래를 계속 틀겠느니라"""
         state = self.get_voice_state(ctx.message.server)
         if state.is_playing():
             player = state.player
