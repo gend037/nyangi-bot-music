@@ -35,11 +35,6 @@ ser=[]
 async def on_ready():
    print('시작!')
   
-    
-	
-class Main_Commands():
-   def __init__(self, bot):
-       self.bot = bot
         
 @bot.command()
 async def 냥이야():
