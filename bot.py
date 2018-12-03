@@ -34,7 +34,6 @@ ser=[]
 @bot.event
 async def on_ready():
        print('시작!')
-       bot.change_presence(game=discord.Game(name="흰둥이랑 노는 중"), status=discord.Status("online"))
   
         
 @bot.command()
