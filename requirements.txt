@@ -1,0 +1,4 @@
+discord
+requests
+youtube-dl==  2018.11.07
+discord.py[voice]
