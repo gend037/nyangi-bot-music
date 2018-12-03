@@ -13,7 +13,7 @@ if not discord.opus.is_loaded():
     # note that on windows this DLL is automatically provided for you
     discord.opus.load_opus('opus')
     
-    def __init__(self, bot):
+def __init__(self, bot):
         self.bot = bot
 
 class VoiceEntry:
