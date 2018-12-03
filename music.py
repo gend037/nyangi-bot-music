@@ -1,10 +1,14 @@
-import asyncio
 import discord
+from discord.ext.commands import Bot
 from discord.ext import commands
 from discord.voice_client import VoiceClient
-from discord import opus
-import functools, youtube_dl
+from discord import opus 
+import asyncio
+import time
 import random
+import os
+import functools, youtube_dl
+from discord.ext import commands
 if not discord.opus.is_loaded():
     # the 'opus' library here is opus.dll on windows
     # or libopus.so on linux in the current directory
@@ -23,10 +27,10 @@ class VoiceEntry:
         self.player = player
 
     def __str__(self):
-        fmt = ' {0.title} 작성자는 {0.uploader} {1.display_name} 님께서 추천해 주셨습니다'
+        fmt = ' {0.title} 작성자 {0.uploader}  {1.display_name}(이)가  신청했느니라'
         duration = self.player.duration
         if duration:
-            fmt = fmt + ' [노래 길이: {0[0]}분 {0[1]}초]'.format(divmod(duration, 60))
+            fmt = fmt + ' [길이: {0[0]}분 {0[1]}초]'.format(divmod(duration, 60))
         return fmt.format(self.player, self.requester)
 
 class VoiceState:
@@ -45,7 +49,7 @@ class VoiceState:
 
         player = self.current.player
         return not player.is_done()
-
+        
     @property
     def player(self):
         return self.current.player
@@ -62,12 +66,11 @@ class VoiceState:
         while True:
             self.play_next_song.clear()
             self.current = await self.songs.get()
-            await self.bot.send_message(self.current.channel, '현제 노래는' + str(self.current))
+            await self.bot.send_message(self.current.channel, '현재 노래는' + str(self.current) + '이니라')
             self.current.player.start()
             await self.play_next_song.wait()
 class Music:
-    """Voice related commands.
-    Works in multiple servers at once.
+    """몰라
     """
     def __init__(self, bot):
         self.bot = bot
@@ -97,22 +100,38 @@ class Music:
 
     @commands.command(pass_context=True, no_pm=True)
     async def join(self, ctx, *, channel : discord.Channel):
-        """Joins a voice channel."""
+        """뭘 보느냐"""
         try:
             await self.create_voice_client(channel)
         except discord.ClientException:
-            await self.bot.say('기다리고 있습니다')
+            await self.bot.say('채널에서 기다리고 있느니라...')
         except discord.InvalidArgument:
-            await self.bot.say('보이스 채널이 아니네요;;')
+            await self.bot.say('음성 채널이 아니로구나!')
         else:
-            await self.bot.say('노래를 틀 준비가 됬습니다 **' + channel.name)
-
+            await self.bot.say('음악을 틀수있느니라 **' + channel.name)
+            
     @commands.command(pass_context=True, no_pm=True)
-    async def summon(self, ctx):
-        """Summons the bot to join your voice channel."""
+    async def 와(self, ctx):
+        """나를 부를수 있느니라"""
         summoned_channel = ctx.message.author.voice_channel
         if summoned_channel is None:
-            await self.bot.say('꿀꿀단분들 노래 들으시려면 들어와주세요')
+            await self.bot.say('어디있는 것이느냐 ㅡㅡ')
+            return False
+
+        state = self.get_voice_state(ctx.message.server)
+        if state.voice is None:
+            state.voice = await self.bot.join_voice_channel(summoned_channel)
+        else:
+            await state.voice.move_to(summoned_channel)
+
+        return True
+    
+    @commands.command(pass_context=True, no_pm=True)
+    async def summon(self, ctx):
+        """나를 부를수 있느니라"""
+        summoned_channel = ctx.message.author.voice_channel
+        if summoned_channel is None:
+            await self.bot.say('어디있는 것이느냐 ㅡㅡ')
             return False
 
         state = self.get_voice_state(ctx.message.server)
@@ -124,13 +143,8 @@ class Music:
         return True
 
     @commands.command(pass_context=True, no_pm=True)
-    async def (self, ctx, *, song : str):
-        """Plays a song.
-        If there is a song currently in the queue, then it is
-        queued until the next song is done playing.
-        This command automatically searches as well from YouTube.
-        The list of supported sites can be found here:
-        https://rg3.github.io/youtube-dl/supportedsites.html
+    async def 까미(self, ctx, *, song : str):
+        """내 이름 뒤에 노래이름을 쓰거라
         """
         state = self.get_voice_state(ctx.message.server)
         opts = {
@@ -140,33 +154,88 @@ class Music:
 
         if state.voice is None:
             success = await ctx.invoke(self.summon)
-            await self.bot.say("불러오고 있으니 기다려 주세요")
             if not success:
                 return
 
         try:
             player = await state.voice.create_ytdl_player(song, ytdl_options=opts, after=state.toggle_next)
         except Exception as e:
-            fmt = 'An error occurred while processing this request: ```py\n{}: {}\n```'
+            fmt = '오류;;: ```py\n{}: {}\n```'
             await self.bot.send_message(ctx.message.channel, fmt.format(type(e).__name__, e))
         else:
             player.volume = 0.6
             entry = VoiceEntry(ctx.message, player)
-            await self.bot.say('Enqueued ' + str(entry))
+            await self.bot.say("노래 준비 중이니라")
+            await self.bot.say('노래신청이니라! ' + str(entry))
             await state.songs.put(entry)
 
     @commands.command(pass_context=True, no_pm=True)
+    async def bumi(self, ctx, *, song : str):
+        """put the link or name of the song~
+        """
+        state = self.get_voice_state(ctx.message.server)
+        opts = {
+            'default_search': 'auto',
+            'quiet': True,
+        }
+
+        if state.voice is None:
+            success = await ctx.invoke(self.summon)
+            if not success:
+                return
+
+        try:
+            player = await state.voice.create_ytdl_player(song, ytdl_options=opts, after=state.toggle_next)
+        except Exception as e:
+            fmt = '오류 났느니라;;: ```py\n{}: {}\n```'
+            await self.bot.send_message(ctx.message.channel, fmt.format(type(e).__name__, e))
+        else:
+            player.volume = 0.6
+            entry = VoiceEntry(ctx.message, player)
+            await self.bot.say("노래 준비 중이니라")
+            await self.bot.say('노래신청이니라! ' + str(entry))
+            await state.songs.put(entry)            
+            
+    @commands.command(pass_context=True, no_pm=True)
+    async def 까미(self, ctx, *, song : str):
+        """내 이름 뒤에 노래이름을 쓰거라
+        """
+        state = self.get_voice_state(ctx.message.server)
+        opts = {
+            'default_search': 'auto',
+            'quiet': True,
+        }
+
+        if state.voice is None:
+            success = await ctx.invoke(self.summon)
+            if not success:
+                return
+
+        try:
+            player = await state.voice.create_ytdl_player(song, ytdl_options=opts, after=state.toggle_next)
+        except Exception as e:
+            fmt = '오류가 났느니라;;: ```py\n{}: {}\n```'
+            await self.bot.send_message(ctx.message.channel, fmt.format(type(e).__name__, e))
+        else:
+            player.volume = 0.6
+            entry = VoiceEntry(ctx.message, player)
+            await self.bot.say("노래 준비중이니라")
+            await self.bot.say('노래신청이니라! ' + str(entry))
+            await state.songs.put(entry)
+    
+    @commands.command(pass_context=True, no_pm=True)
     async def vol(self, ctx, value : int):
-        """Sets the volume of the currently playing song."""
+        """볼륨을 설정할 수 있느니라."""
 
         state = self.get_voice_state(ctx.message.server)
         if state.is_playing():
             player = state.player
             player.volume = value / 100
-            await self.bot.say('볼륨은 {:.0%}'.format(player.volume))
+            await self.bot.say('볼륨을 {:.0%} 바꿨느니라 이제 좀 났느냐?'.format(player.volume))
     @commands.command(pass_context=True, no_pm=True)
-    async def 계속(self, ctx):
-        """노래를 계속 틀게요."""
+    
+    async def resume(self, ctx):
+        """계속 틀겠느니라"""
         state = self.get_voice_state(ctx.message.server)
         if state.is_playing():
             player = state.player
@@ -174,8 +243,7 @@ class Music:
 
     @commands.command(pass_context=True, no_pm=True)
     async def 그만(self, ctx):
-        """Stops playing audio and leaves the voice channel.
-        This also clears the queue.
+        """날 끌수 있느니라
         """
         server = ctx.message.server
         state = self.get_voice_state(server)
@@ -188,47 +256,90 @@ class Music:
             state.audio_player.cancel()
             del self.voice_states[server.id]
             await state.voice.disconnect()
-            await self.bot.say("들어가세요 감사합니다")
+            await self.bot.say("흥이 깨졌느니라!")
+        except:
+            pass
+        
+    @commands.command(pass_context=True, no_pm=True)
+    async def 그만(self, ctx):
+        """날 끌수 있느니라
+        """
+        server = ctx.message.server
+        state = self.get_voice_state(server)
+
+        if state.is_playing():
+            player = state.player
+            player.stop()
+
+        try:
+            state.audio_player.cancel()
+            del self.voice_states[server.id]
+            await state.voice.disconnect()
+            await self.bot.say("흥이 깨졌느니라!")
         except:
             pass
 
     @commands.command(pass_context=True, no_pm=True)
-    async def 넘겨(self, ctx):
-        """Vote to skip a song. The song requester can automatically skip.
-        3 skip votes are needed for the song to be skipped.
+    async def skip(self, ctx):
+        """스킵하고 싶으면 3개 이상의 찬성을 받아야 하느니라. 신청자는 원하면 스킵이 가능하니라
         """
 
         state = self.get_voice_state(ctx.message.server)
         if not state.is_playing():
-            await self.bot.say('노래 안틀고 있어요')
+            await self.bot.say('으냣? 틀고있는게 없느니라....')
             return
 
         voter = ctx.message.author
         if voter == state.current.requester:
-            await self.bot.say('넘기겠습니다')
+            await self.bot.say('신청자가 스킵을 하고싶다 하였느니라')
             state.skip()
         elif voter.id not in state.skip_votes:
             state.skip_votes.add(voter.id)
             total_votes = len(state.skip_votes)
             if total_votes >= 3:
-                await self.bot.say('넘기겠습니다')
+                await self.bot.say('으냐아앗? 결국 스킵했느나?')
                 state.skip()
             else:
-                await self.bot.say('찬성에 한표 더 늘었네요 [{}/3]'.format(total_votes))
+                await self.bot.say('스킵 할것이느냐? [{}/3] (you really want to skip the song...? [{}/3] )'.format(total_votes) )
         else:
-            await self.bot.say('투표는 한번만 해주세요')
+            await self.bot.say('이미 투표하였느니라! 반칙이니라!! (you already had a vote!)')
+      
+    @commands.command(pass_context=True, no_pm=True)
+    async def 스킵(self, ctx):
+        """스킵하고 싶으면 3개 이상의 찬성을 받아야 하느니라. 신청자는 원하면 스킵이 가능하느니라
+        """
+
+        state = self.get_voice_state(ctx.message.server)
+        if not state.is_playing():
+            await self.bot.say('틀고 있지 않느니라')
+            return
+
+        voter = ctx.message.author
+        if voter == state.current.requester:
+            await self.bot.say('신청자가 스킵을 하고싶다 하였느니라')
+            state.skip()
+        elif voter.id not in state.skip_votes:
+            state.skip_votes.add(voter.id)
+            total_votes = len(state.skip_votes)
+            if total_votes >= 3:
+                await self.bot.say('스킵하겠느니라')
+                state.skip()
+            else:
+                await self.bot.say('스킵을 원하느냐? [{}/3]'.format(total_votes))
+        else:
+            await self.bot.say('이미 투표하지 않았느냐 ㅡㅡ')
 
     @commands.command(pass_context=True, no_pm=True)
     async def playing(self, ctx):
-        """Shows info about the currently played song."""
+        """지금 틀고있는 노래이니라.."""
 
         state = self.get_voice_state(ctx.message.server)
         if state.current is None:
-            await self.bot.say('아무것도 하고 있지 않습니다')
+            await self.bot.say('아무것도 틀고 있지 않느니라')
         else:
             skip_count = len(state.skip_votes)
-            await self.bot.say('이번 노래는 {} [skips: {}/3]'.format(state.current, skip_count))
-            
+            await self.bot.say('현재 노래이니라! 현재 스킵 갯수는 이정도이니라 {} [skips: {}/3]'.format(state.current, skip_count))
+        
 def setup(bot):
     bot.add_cog(Music(bot))
-    print('노래 틀 준비 끝났습니다')
+    print('노래ㄱㄱ')
