@@ -125,7 +125,7 @@ class Music:
 
     @commands.command(pass_context=True, no_pm=True)
     async def 냥이(self, ctx, *, song : str):
-        """내 이름 뒤에 듣고 싶은 노래 제목을 
+        """내 이름 뒤에 듣고 싶은 노래 제목을 쓰거라, 링크도 쓸수 있느니라
         """
         state = self.get_voice_state(ctx.message.server)
         opts = {
@@ -147,7 +147,7 @@ class Music:
         else:
             player.volume = 0.6
             entry = VoiceEntry(ctx.message, player)
-            await self.bot.say('신청왔느니라 ' + str(entry))
+            await self.bot.say('노래신청이니라! ' + str(entry))
             await state.songs.put(entry)
 
     @commands.command(pass_context=True, no_pm=True)
@@ -198,7 +198,7 @@ class Music:
 
         voter = ctx.message.author
         if voter == state.current.requester:
-            await self.bot.say('진짜 넘기고 싶은게냐?')
+            await self.bot.say('넘기겠느니라')
             state.skip()
         elif voter.id not in state.skip_votes:
             state.skip_votes.add(voter.id)
@@ -207,7 +207,7 @@ class Music:
                 await self.bot.say('넘기겠느니라')
                 state.skip()
             else:
-                await self.bot.say('스킵 할것 같구나... [{}/3]'.format(total_votes))
+                await self.bot.say('스킵 할 것 같구나... [{}/3]'.format(total_votes))
         else:
             await self.bot.say('이미 투표하지 않았느냐 ㅡㅡ')
 
