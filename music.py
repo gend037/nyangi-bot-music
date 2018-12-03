@@ -105,7 +105,7 @@ class Music:
         except discord.InvalidArgument:
             await self.bot.say('하... 이건 음성채널이 아니구나')
         else:
-            await self.bot.say(음악 틀 수 있느니라 **' + channel.name)
+            await self.bot.say('음악 틀 수 있느니라' **' + channel.name)
 
     @commands.command(pass_context=True, no_pm=True)
     async def 와(self, ctx):
