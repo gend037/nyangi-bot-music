@@ -39,10 +39,10 @@ async def on_ready():
    
  
 filter = ['cyka blyat', 'fuck', 'ёб твою мать', '씨발', '개새끼', '닥쳐']
-@bot.event
+@bot.listen() 
 async def on_message(message):
     if message.content.lower() in filter:
-        await bot.delete_message(message)
+        await bot.delete_message(message) 
         await bot.send_message(message.channel, "흰둥이가 뭘 배우겠느냐! 닥치거라!")
      
 
