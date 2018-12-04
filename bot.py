@@ -34,7 +34,7 @@ ser=[]
 @bot.event
 async def on_ready():
        print('시작!')
-       await bot.change_presence(game=discord.Game(name='보석보다도 아름다운 흰둥이와 놀아주는 '))
+       await bot.change_presence(game=discord.Game(name='보석보다도 아름다운 흰둥이와 놀아주는 중이니라'))
 
         
 @bot.command()
