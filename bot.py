@@ -34,7 +34,8 @@ ser=[]
 @bot.event
 async def on_ready():
        print('시작!')
-  
+       await bot.change_presence(game=discord.Game(name='baba yetu yetu'))
+
         
 @bot.command()
 async def 냥이야():
