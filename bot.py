@@ -27,7 +27,7 @@ load_opus_lib()
 bot = commands.Bot("")
 for ext in  ["music"]:
     bot.load_extension(ext)
-chatFilter = ['Cyka Blyat', 'Fuck', 'ёб твою мать']
+filter = ['Cyka Blyat', 'Fuck', 'ёб твою мать']
 
 rol=[]
 ser=[]
@@ -39,14 +39,12 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    contents = message.split(' ')
-    for word in contents:
-        if word.upper() in chatFilter:
-            try:
-                await bot.delete_message(message)
-                await bot.send_message(message.channel, "흰둥이가 뭘 배우겠느냐! 닥치거라!")
-            except discord.errors.NotFound:
-                return
+    if message.content.lower() in filter:
+        try:
+            await bot.delete_message(message)
+            await bot.send_message(message.channel, "흰둥이가 뭘 배우겠느냐! 닥치거라!")
+        except discord.errors.NotFound:
+            return
 
         
 @bot.command()
