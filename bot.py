@@ -51,8 +51,16 @@ async def 안녕():
     possible_responses = [
         '인사를 받아주겠느니라',
         '갑자기 인사를 왜 하는것이냐',
-        '안녕하느냐',
+        '흥이니라',
 
+    ]
+    await bot.say(random.choice(possible_responses))
+   
+@bot.command()
+async def 냥이():
+    possible_responses = [
+        '조용히하거라! 우리 보석보다도 소중한 흰둥이가 자고 있지 않느냐!',
+        '꺼지거라',
     ]
     await bot.say(random.choice(possible_responses))
 
@@ -63,6 +71,7 @@ async def 고마워():
         '칭찬해준다고 아무것도 나오지 않느니라',
         '너 머리가 잘못된 것이냐 갑자기 이상한 말을 지껄이는 구나',
         '흥, 내가 잘했으니 당연히 칭찬을 받아야 하는 것이니라',
+        '왜 그러는것이냐;; 부담되지 않느냐!',
 
     ]
     await bot.say(random.choice(possible_responses))
