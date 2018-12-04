@@ -27,7 +27,7 @@ load_opus_lib()
 bot = commands.Bot("")
 for ext in  ["music"]:
     bot.load_extension(ext)
-filter = ['Cyka Blyat', 'Fuck', 'ёб твою мать']
+filter = ['cyka blyat', 'fuck', 'ёб твою мать']
 
 rol=[]
 ser=[]
