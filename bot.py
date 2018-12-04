@@ -45,7 +45,7 @@ async def on_message(message):
             try:
                 await bot.delete_message(message)
                 await bot.send_message(message.channel, "흰둥이가 뭘 배우겠느냐! 닥치거라!")
-            except discord.errors.NotFound
+            except discord.errors.NotFound:
                 return
 
         
