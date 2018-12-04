@@ -27,7 +27,7 @@ load_opus_lib()
 bot = commands.Bot("")
 for ext in  ["music"]:
     bot.load_extension(ext)
-filter = ['cyka blyat', 'fuck', 'ёб твою мать', '씨발', '개새끼', '닥쳐']
+
 
 rol=[]
 ser=[]
@@ -36,15 +36,15 @@ ser=[]
 async def on_ready():
        print('시작!')
        await bot.change_presence(game=discord.Game(name='보석보다 아름다운 흰둥이와 놀아주는 중이니라'))
-
-@bot.listen()
+   
+ 
+filter = ['cyka blyat', 'fuck', 'ёб твою мать', '씨발', '개새끼', '닥쳐']
+@bot.event
 async def on_message(message):
     if message.content.lower() in filter:
-        try:
-            await bot.delete_message(message)
-            await bot.send_message(message.channel, "흰둥이가 뭘 배우겠느냐! 닥치거라!")
-        except discord.errors.NotFound:
-            return
+        await bot.delete_message(message)
+        await bot.send_message(message.channel, "흰둥이가 뭘 배우겠느냐! 닥치거라!")
+     
 
         
 @bot.command()
