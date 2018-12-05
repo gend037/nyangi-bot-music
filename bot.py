@@ -38,12 +38,7 @@ async def on_ready():
        await bot.change_presence(game=discord.Game(name='보석보다 아름다운 흰둥이와 놀아주는 중이니라'))
    
  
-filter = ['cyka blyat', 'fuck', 'ёб твою мать', '씨발', '개새끼', '닥쳐']
-@bot.event 
-async def on_message(message):
-    if message.content.lower() in filter:
-        await bot.delete_message(message) 
-        await bot.send_message(message.channel, "흰둥이가 뭘 배우겠느냐! 닥치거라!")
+
      
 
         
