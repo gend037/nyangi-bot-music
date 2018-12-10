@@ -102,7 +102,7 @@ filter = ['cyka blyat', 'fuck', 'ёб твою мать', '씨발', '개새끼',
 async def on_message(message):
     if message.content.lower() in filter:
         await bot.delete_message(message) 
-        await bot.send_message(message.channel, f'{message.author.name} 흰둥이가 뭘 배우겠느냐! 닥치거라!'))
+        await bot.send_message(message.channel, f'{message.author.name} 흰둥이가 뭘 배우겠느냐! 닥치거라!')
    
 @bot.command(pass_context=True)
 async def help(ctx):
