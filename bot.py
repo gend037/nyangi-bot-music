@@ -27,6 +27,8 @@ load_opus_lib()
 bot = commands.Bot("")
 for ext in  ["music"]:
     bot.load_extension(ext)
+  
+bot.remove_command('help')  
 
 
 rol=[]
