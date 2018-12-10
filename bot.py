@@ -98,7 +98,7 @@ async def 놀아줘():
    
 filter = ['cyka blyat', 'fuck', 'ёб твою мать', '씨발', '개새끼', '닥쳐']
 
-@bot.listen()
+@bot.event
 async def on_message(message):
     if message.content.lower() in filter:
         await bot.delete_message(message) 
